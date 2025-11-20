@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ONE TASK</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <!-- Import Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7STPrfTIIDwtKmoPFWRg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+
+    <main class="app-container">
+        
+        <!-- TOP BAR (Control icons only) -->
+        <div class="top-nav">
+            <!-- LEFT CORNER: Work mode (Survival vs Training) -->
+            <div class="switch-wrapper left">
+                <input type="checkbox" id="mode-toggle" class="theme-checkbox">
+                <!-- Class 'mode-switch-style' swaps icons to Wheel/Trophy in CSS -->
+                <label for="mode-toggle" class="theme-switch mode-switch-style"></label>
+            </div>
+
+            <!-- RIGHT CORNER: Dark Mode -->
+            <div class="switch-wrapper right">
+                <input type="checkbox" id="theme-toggle-checkbox" class="theme-checkbox">
+                <label for="theme-toggle-checkbox" class="theme-switch"></label>
+            </div>
+        </div>
+        
+        <h1 class="title">ONE TASK</h1>
+
+        <!-- INFO CENTER (Dynamic mode description) -->
+        <div class="mode-info-container">
+            <p id="mode-label" class="mode-status">Tryb: <strong>Przetrwanie</strong> 🚑</p>
+            <p id="mode-desc" class="mode-description">Opcja na gorszy moment. Zero presji. Tylko pomoc.</p>
+        </div>
+        
+        <p class="prompt">co Cię przytłacza? opisz, a ja spróbuje Ci pomóc zrobić pierwszy krok</p>
+        
+        <textarea id="task-input" placeholder="np. 'Muszę napisać pracę magisterską'"></textarea>
+        
+        <button id="generate-button">Rozbij to!</button>
+        
+        <div id="steps-container">
+            <!-- Steps injected via JS -->
+        </div>
+
+    </main>
+
+    <!-- Confetti library (used when checking off tasks) -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+    <script src="/static/script.js"></script>
+</body>
+</html>
