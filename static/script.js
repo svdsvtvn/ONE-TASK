@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- DARK MODE ---
     const themeToggleCheckbox = document.getElementById('theme-toggle-checkbox');
     const body = document.body;
     const currentTheme = localStorage.getItem('theme');
@@ -22,7 +21,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- MODE SELECTION (Survival vs Training) ---
     const modeToggle = document.getElementById('mode-toggle');
     const modeLabel = document.getElementById('mode-label');
     const modeDesc = document.getElementById('mode-desc'); 
@@ -31,14 +29,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (modeToggle) {
         modeToggle.addEventListener('change', () => {
             if (modeToggle.checked) {
-                // --- TRAINING MODE (Trophy) ---
                 currentMode = 'growth';
                 modeLabel.innerHTML = 'Tryb: <strong>Trening</strong> 🏆';
                 modeDesc.textContent = 'Budujemy nawyk. Zapisuję Twoje sukcesy w historii.'; 
                 
-                // NO CONFETTI (Per request - clean change)
             } else {
-                // --- SURVIVAL MODE (Rescue) ---
                 currentMode = 'survival';
                 modeLabel.innerHTML = 'Tryb: <strong>Przetrwanie</strong> 🚑';
                 modeDesc.textContent = 'Opcja na gorszy moment. Zero presji. Tylko pomoc.'; 
@@ -46,7 +41,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- ONE TASK LOGIC ---
     
     const taskInput = document.getElementById('task-input');
     const generateButton = document.getElementById('generate-button');
@@ -60,7 +54,6 @@ document.addEventListener('DOMContentLoaded', () => {
         generateButton.addEventListener('click', handleStartConversation);
     }
 
-    // STAGE 1: Start
     async function handleStartConversation() {
         const taskDescription = taskInput.value;
         if (!taskDescription.trim()) {
@@ -74,7 +67,6 @@ document.addEventListener('DOMContentLoaded', () => {
         stepsContainer.innerHTML = ''; 
 
         try {
-            // CHANGE HERE: We also send 'mode' (work mode) to the backend
             const response = await fetch('/start-conversation', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -141,7 +133,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: JSON.stringify({ 
                     task: currentTask,  
                     user_answer: input.value,
-                    type: currentProblemType 
+                    type: currentProblemType,
+                    mode: currentMode
                 })
             });
 
@@ -219,7 +212,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     task: currentTask,
                     blocker: blockerText, 
                     type: currentProblemType,
-                    user_answer: userAnswer 
+                    user_answer: userAnswer,
+                    mode: currentMode
                 })
             });
             const stepsObject = await response.json();
@@ -305,7 +299,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
                     task: currentTask,
-                    last_steps: lastWarmupStepsContext 
+                    last_steps: lastWarmupStepsContext,
+                    mode: currentMode
                 })
             });
             

@@ -5,7 +5,7 @@ from flask import Flask, render_template, request, jsonify
 from dotenv import load_dotenv
 import google.generativeai as genai
 
-# --- CONFIGURATION ---
+
 load_dotenv()
 
 if "GOOGLE_API_KEY" not in os.environ:
@@ -27,9 +27,8 @@ model = genai.GenerativeModel(
 
 app = Flask(__name__)
 
-# --- ORIGINAL PROMPTS (RESTORED) ---
 
-# Only change: Added {tone_instruction} at the end to handle the switch
+
 PROMPT_TRIAGE_QUESTION = """
 Jesteś "Rozbijaczem" – coachem produktywności ADHD.
 
@@ -52,7 +51,6 @@ Zwróć czysty JSON:
 }}
 """
 
-# RESTORED ORIGINAL (Smart Batching)
 PROMPT_GET_BLOCKERS_AND_WARMUP = """
 Typ: "{type}"
 Zadanie: "{task}"
@@ -65,6 +63,7 @@ ZASADY:
 Twoje zadanie:
 1. Zidentyfikuj 3 blokery.
 2. Dla KAŻDEGO blokera napisz "Rozgrzewkę" (3 mikro-kroki).
+{tone_instruction}
 
 Zwróć czysty JSON:
 {{
@@ -85,7 +84,6 @@ Zwróć czysty JSON:
 }}
 """
 
-# RESTORED ORIGINAL (With fix for user_answer context)
 PROMPT_FINAL_STEPS = """
 Zadanie: "{task}"
 Własny Bloker: "{blocker}"
@@ -94,6 +92,7 @@ INFO Z TRIAŻU: "{user_answer}"
 
 Wygeneruj 3 kroki rozgrzewki (setup), które przygotują grunt pod pracę.
 Kroki muszą być aktywne i fizyczne, aby przełamać paraliż.
+{tone_instruction}
 
 Zwróć czysty JSON:
 {{
@@ -103,7 +102,6 @@ Zwróć czysty JSON:
 }}
 """
 
-# RESTORED ORIGINAL (Nano-Steps)
 PROMPT_ACTION_STEPS = """
 Zadanie główne: "{task}"
 
@@ -121,6 +119,7 @@ To mają być "Nano-Kroki" - tak małe, że nie wymagają myślenia, tylko wykon
 4. Jeśli user otworzył IDE w rozgrzewce -> Pierwszy krok to "Napisz import..." lub "Stwórz plik...", a nie "Planowanie architektury".
 
 Cel: Rozpędzić użytkownika przez małe sukcesy, a nie przytłoczyć go planowaniem.
+{tone_instruction}
 
 Zwróć czysty JSON:
 {{
@@ -130,7 +129,6 @@ Zwróć czysty JSON:
 }}
 """
 
-# --- HELPER ---
 def clean_json_response(ai_response):
     print(f"\n--- MODEL RESPONSE ---\n{ai_response}\n------------------------\n")
     if not ai_response: return None
@@ -141,7 +139,6 @@ def clean_json_response(ai_response):
         cleaned = "\n".join(new_lines).strip()
     return cleaned
 
-# --- ENDPOINTS ---
 
 @app.route('/')
 def index():
@@ -154,10 +151,10 @@ def start_conversation():
         task = data.get('task')
         mode = data.get('mode', 'survival')
 
-        if mode == 'growth':
-            tone_add = "TON: Bądź energicznym trenerem. Motywuj krótko i konkretnie."
+        if mode == 'survival':
+            tone_add = "TON: Bądź edukacyjnym, spokojnym trenerem. Wspieraj budowanie nawyku. Wyjaśniaj dlaczego, motywuj długoterminowo."
         else:
-            tone_add = "TON: Bądź łagodnym opiekunem. Zero presji, dużo empatii."
+            tone_add = "TON: Bądź krótki, żołnierski, dyrektywny. Zero gadania. Tylko konkretne rozkazy. Bez wyjaśnień."
 
         prompt = PROMPT_TRIAGE_QUESTION.format(
             task=task, 
@@ -174,8 +171,18 @@ def start_conversation():
 def get_blockers():
     try:
         data = request.get_json()
+        mode = data.get('mode', 'survival')
+        
+        if mode == 'survival':
+            tone_add = "TON: Bądź edukacyjnym, spokojnym trenerem. Wspieraj budowanie nawyku. Wyjaśniaj dlaczego, motywuj długoterminowo."
+        else:
+            tone_add = "TON: Bądź krótki, żołnierski, dyrektywny. Zero gadania. Tylko konkretne rozkazy. Bez wyjaśnień."
+        
         prompt = PROMPT_GET_BLOCKERS_AND_WARMUP.format(
-            task=data['task'], user_answer=data['user_answer'], type=data['type']
+            task=data['task'], 
+            user_answer=data['user_answer'], 
+            type=data['type'],
+            tone_instruction=tone_add
         )
         response = model.generate_content(prompt)
         cleaned = clean_json_response(response.text)
@@ -199,13 +206,20 @@ def get_blockers():
 def generate_final_steps():
     try:
         data = request.get_json()
-        user_answer = data.get('user_answer', 'Brak odpowiedzi użytkownika z triażu.') 
+        user_answer = data.get('user_answer', 'Brak odpowiedzi użytkownika z triażu.')
+        mode = data.get('mode', 'survival')
+        
+        if mode == 'survival':
+            tone_add = "TON: Bądź edukacyjnym, spokojnym trenerem. Wspieraj budowanie nawyku. Wyjaśniaj dlaczego, motywuj długoterminowo."
+        else:
+            tone_add = "TON: Bądź krótki, żołnierski, dyrektywny. Zero gadania. Tylko konkretne rozkazy. Bez wyjaśnień."
         
         prompt = PROMPT_FINAL_STEPS.format(
             task=data['task'], 
             blocker=data['blocker'], 
             type=data['type'],
-            user_answer=user_answer
+            user_answer=user_answer,
+            tone_instruction=tone_add
         )
         response = model.generate_content(prompt)
         return jsonify(json.loads(clean_json_response(response.text)))
@@ -218,10 +232,17 @@ def generate_action_steps():
     try:
         data = request.get_json()
         last_steps_context = data.get('last_steps', 'Brak danych o rozgrzewce.')
+        mode = data.get('mode', 'survival')
+        
+        if mode == 'survival':
+            tone_add = "TON: Bądź edukacyjnym, spokojnym trenerem. Wspieraj budowanie nawyku. Wyjaśniaj dlaczego, motywuj długoterminowo."
+        else:
+            tone_add = "TON: Bądź krótki, żołnierski, dyrektywny. Zero gadania. Tylko konkretne rozkazy. Bez wyjaśnień."
         
         prompt = PROMPT_ACTION_STEPS.format(
             task=data['task'], 
-            last_steps=last_steps_context 
+            last_steps=last_steps_context,
+            tone_instruction=tone_add
         )
         
         response = model.generate_content(prompt)

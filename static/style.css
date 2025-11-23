@@ -1,4 +1,4 @@
-/* --- VARIABLES --- */
+
 :root {
     --bg-main: #f0f0f0;
     --bg-app: #ffffff;
@@ -23,7 +23,6 @@
     --text-error: #d9534f;
     --text-dim: #999;
 
-    /* Switch colors */
     --switch-bg: #ffffff;
     --switch-border: #ddd;
     --switch-handle: #333;
@@ -62,7 +61,6 @@ body.dark-mode {
     --switch-icon-moon: #333; 
 }
 
-/* --- RESET --- */
 body, h1, p, textarea, button, input {
     margin: 0;
     padding: 0;
@@ -92,14 +90,13 @@ body {
     position: relative; 
 }
 
-/* --- TOP NAVIGATION --- */
 .top-nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 10px;
     width: 100%;
-    min-height: 40px; /* Space reservation */
+    min-height: 40px;
 }
 
 .switch-wrapper {
@@ -107,80 +104,70 @@ body {
     align-items: center;
 }
 
-/* --- SWITCH BASE (ORIGINAL DIMENSIONS) --- */
 .theme-checkbox { display: none; }
 
 .theme-switch {
     display: block;
-    width: 60px;  /* RESTORED: 60px */
-    height: 30px; /* RESTORED: 30px */
+    width: 60px;
+    height: 30px;
     background-color: var(--switch-bg);
     border: 1px solid var(--switch-border);
-    border-radius: 15px; /* Half the height */
+    border-radius: 15px;
     position: relative;
     cursor: pointer;
     transition: background-color 0.3s, border-color 0.3s;
 }
 
-/* KNOB (Circle) */
 .theme-switch::before {
     font-family: "Font Awesome 6 Free";
     font-weight: 900;
     position: absolute;
-    width: 24px;  /* Original size */
-    height: 24px; /* Original size */
+    width: 24px;
+    height: 24px;
     border-radius: 50%; 
     background-color: var(--switch-handle); 
-    top: 2px;  /* Original spacing */
-    left: 2px; /* Original spacing */
+    top: 2px;
+    left: 2px;
     transition: transform 0.3s, background-color 0.3s, color 0.3s;
     box-shadow: 0 1px 2px rgba(0,0,0,0.2); 
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1rem; /* Original icon size */
+    font-size: 1rem;
     line-height: 1;
 }
 
-/* BACKGROUND (Background icon) */
 .theme-switch::after {
     font-family: "Font Awesome 6 Free";
     font-weight: 900;
     position: absolute;
-    font-size: 1rem; /* Original icon size */
-    right: 6px; /* Original spacing */
+    font-size: 1rem;
+    right: 6px;
     top: 50%;
     transform: translateY(-50%);
     transition: opacity 0.3s ease, color 0.3s;
 }
 
-/* --- DARK MODE ICONS (Default) --- */
 .theme-switch::before { content: '\f185'; color: var(--switch-icon-sun); } /* Sun */
 .theme-switch::after { content: '\f186'; color: var(--switch-icon-moon); } /* Moon */
 
-/* Dark Mode toggled */
 #theme-toggle-checkbox:checked + .theme-switch::before {
-    transform: translateX(30px); /* RESTORED: 30px slide */
+    transform: translateX(30px);
     content: '\f186'; 
     color: var(--switch-icon-moon);
 }
 #theme-toggle-checkbox:checked + .theme-switch::after {
     content: '\f185'; 
-    left: 6px; /* Original spacing */
+    left: 6px;
     right: auto;
     color: var(--switch-icon-sun);
 }
 
-/* --- WORK MODE ICONS (Class .mode-switch-style) --- */
-/* Override icons only; sizes inherit from .theme-switch */
-
-/* State: Survival (Knob=Wheel, Background=Trophy) */
 .theme-switch.mode-switch-style::before { content: '\f1cd' !important; } 
 .theme-switch.mode-switch-style::after { content: '\f091' !important; }
 
-/* State: Training (Knob=Trophy, Background=Wheel) */
 #mode-toggle:checked + .theme-switch.mode-switch-style::before {
-    transform: translateX(30px); /* Same slide as Dark Mode */
+    transform: translateX(30px);
     content: '\f091' !important; 
 }
 #mode-toggle:checked + .theme-switch.mode-switch-style::after {
@@ -189,7 +176,6 @@ body {
     right: auto;
 }
 
-/* --- TITLE AND DESCRIPTION --- */
 .title {
     font-size: 1.4rem;
     font-weight: 700;
@@ -208,7 +194,7 @@ body {
     flex-direction: column;
     align-items: center;
     gap: 4px;
-    min-height: 50px; /* Prevent text jumping */
+    min-height: 50px;
 }
 
 .mode-status {
@@ -225,7 +211,6 @@ body {
     margin: 0;
 }
 
-/* --- REST (No changes) --- */
 .prompt {
     font-size: 0.95rem;
     color: var(--text-secondary);
