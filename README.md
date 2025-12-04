@@ -1,11 +1,15 @@
-ONE TASK 🧠 | Breaking Procrastination, One Step at a Time
+### ONE TASK 🧠 | Breaking Procrastination, One Step at a Time
+
+### 🚀 [CLICK HERE TO TRY LIVE DEMO](https://one-task-two.vercel.app/)
+
+> **Note:** The application interface is currently in **Polish** 🇵🇱.
 
     EN: "You don't have to do everything. Just take the first step."
 
     PL: "Nie musisz robić wszystkiego. Zrób tylko pierwszy krok."
 
 
-🇬🇧 English Version
+## 🇬🇧 English Version
 
 ONE TASK is an innovative web application that acts as a personal productivity assistant. Instead of another overwhelming to-do list, the system guides the user through the "Golden Loop" – a proprietary 5-stage process that moves you from emotional blockage to taking the first, physical action step.
 
@@ -52,7 +56,7 @@ ONE TASK is an innovative web application that acts as a personal productivity a
 
 
 
-🇵🇱 Polish Version / Wersja Polska
+## 🇵🇱 Polish Version / Wersja Polska
 
 ONE TASK to innowacyjna aplikacja webowa działająca jako osobisty asystent produktywności. Zamiast kolejnej przytłaczającej listy zadań, system prowadzi użytkownika przez "Złotą Pętlę" (Golden Loop) – autorski, 5-etapowy proces przejścia od blokady emocjonalnej do wykonania pierwszego, fizycznego kroku.
 
